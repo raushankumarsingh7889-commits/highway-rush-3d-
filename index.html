@@ -1,0 +1,5036 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
+
+<title>Highway Rush 3D - Ultimate</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#080d14;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+#phone{
+    position:relative;
+    width:min(100vw,430px);
+    height:min(100vh,860px);
+    overflow:hidden;
+    background:#5bcfff;
+    box-shadow:0 0 50px rgba(0,0,0,.7);
+}
+
+@media(max-width:430px){
+    #phone{
+        width:100vw;
+        height:100vh;
+        border-radius:0;
+    }
+}
+
+canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+    touch-action:none;
+}
+
+/* =========================
+   COMMON
+========================= */
+
+.overlay{
+    position:absolute;
+    inset:0;
+    z-index:50;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.hidden{
+    display:none!important;
+}
+
+button{
+    font-family:Arial,sans-serif;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+}
+
+/* =========================
+   SPLASH
+========================= */
+
+#splash{
+    z-index:300;
+    color:white;
+    text-align:center;
+
+    background:
+        radial-gradient(circle at 50% 40%,
+        #214e78 0,
+        #0a1d31 45%,
+        #030810 100%);
+}
+
+.splashBox{
+    width:90%;
+    animation:splashIn 1s ease;
+}
+
+.logoCircle{
+    width:110px;
+    height:110px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:55px;
+    background:linear-gradient(145deg,#ffd83d,#ff7b00);
+    box-shadow:0 0 35px rgba(255,190,30,.35);
+}
+
+.splashBox h1{
+    font-size:clamp(28px,8vw,46px);
+    margin-bottom:16px;
+}
+
+.splashBox p{
+    color:#ffd83d;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.loading{
+    width:180px;
+    height:5px;
+    margin:25px auto 0;
+    background:#263b50;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.loading span{
+    display:block;
+    height:100%;
+    width:0;
+    background:#ffd83d;
+    animation:load 3s linear forwards;
+}
+
+@keyframes load{
+    to{width:100%}
+}
+
+@keyframes splashIn{
+    from{
+        opacity:0;
+        transform:scale(.7);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+/* =========================
+   NAME
+========================= */
+
+#nameScreen{
+    z-index:250;
+    background:rgba(0,0,0,.78);
+}
+
+.nameBox,
+.menuBox,
+.gameOverBox{
+    width:92%;
+    border-radius:24px;
+    padding:22px;
+    background:
+        linear-gradient(145deg,#183653,#091522);
+    color:white;
+    box-shadow:0 20px 60px rgba(0,0,0,.65);
+}
+
+.nameBox{
+    text-align:center;
+}
+
+.nameBox h1{
+    color:#ffd83d;
+    margin-bottom:10px;
+}
+
+.nameBox p{
+    color:#b9d4e9;
+    line-height:1.5;
+    margin-bottom:18px;
+}
+
+.textInput{
+    width:100%;
+    padding:14px;
+    border:2px solid #405b73;
+    border-radius:12px;
+    background:#07111c;
+    color:white;
+    font-size:17px;
+    text-align:center;
+    outline:none;
+}
+
+.textInput:focus{
+    border-color:#ffd83d;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.bigButton,
+.menuButton,
+.smallButton{
+    border:0;
+    border-radius:12px;
+    color:white;
+    font-weight:bold;
+}
+
+.bigButton{
+    width:100%;
+    padding:14px;
+    margin-top:12px;
+    background:#20aa4b;
+    font-size:18px;
+}
+
+.menuButton{
+    width:100%;
+    padding:13px;
+    margin-top:9px;
+    font-size:16px;
+}
+
+.start{
+    background:#20aa4b;
+    box-shadow:0 3px 0 #11682c;
+}
+
+.garage{
+    background:#e67e22;
+    box-shadow:0 3px 0 #984c0d;
+}
+
+.leader{
+    background:#8e44ad;
+    box-shadow:0 3px 0 #54236a;
+}
+
+.settings{
+    background:#1976d2;
+    box-shadow:0 3px 0 #0c4d8c;
+}
+
+.red{
+    background:#c0392b;
+}
+
+.gray{
+    background:#555;
+}
+
+/* =========================
+   MENU
+========================= */
+
+#menu{
+    z-index:100;
+    align-items:flex-start;
+    overflow:auto;
+    padding:15px 0;
+    background:
+        linear-gradient(
+            rgba(1,8,15,.70),
+            rgba(1,8,15,.94)
+        );
+}
+
+.menuBox{
+    max-height:96%;
+    overflow:auto;
+    text-align:center;
+}
+
+.menuBox h1{
+    color:#ffd83d;
+    font-size:38px;
+    margin-bottom:5px;
+}
+
+.welcome{
+    color:#a9dfff;
+    margin-bottom:13px;
+}
+
+.menuStats{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.stat{
+    padding:8px 12px;
+    border-radius:10px;
+    background:rgba(0,0,0,.3);
+    font-weight:bold;
+}
+
+.panel{
+    display:none;
+    margin-top:13px;
+    padding:14px;
+    border-radius:16px;
+    background:rgba(0,0,0,.28);
+}
+
+.panelTitle{
+    color:#ffd83d;
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+/* =========================
+   GARAGE
+========================= */
+
+.vehicleGrid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:9px;
+}
+
+.vehicleCard{
+    padding:10px;
+    border-radius:14px;
+    background:#203c59;
+    border:2px solid transparent;
+}
+
+.vehicleCard.selected{
+    border-color:#ffd83d;
+    box-shadow:0 0 15px rgba(255,216,61,.3);
+}
+
+.vehicleIcon{
+    font-size:35px;
+}
+
+.vehicleName{
+    font-weight:bold;
+    margin:4px 0;
+}
+
+.vehiclePrice{
+    color:#ffd83d;
+    font-size:13px;
+    margin-bottom:6px;
+}
+
+.vehicleAction{
+    width:100%;
+    padding:7px;
+    border:0;
+    border-radius:8px;
+    color:white;
+    background:#1976d2;
+    font-weight:bold;
+}
+
+.vehicleAction.buy{
+    background:#20a94b;
+}
+
+.colorRow{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:8px;
+}
+
+.colorDot{
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    border:3px solid white;
+}
+
+.colorDot.active{
+    outline:3px solid #ffd83d;
+}
+
+/* =========================
+   LEADERBOARD
+========================= */
+
+.leaderRow{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px;
+    margin:5px 0;
+    border-radius:9px;
+    background:rgba(255,255,255,.08);
+}
+
+.rank{
+    width:32px;
+    color:#ffd83d;
+    font-weight:bold;
+}
+
+.leaderName{
+    flex:1;
+    text-align:left;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+.leaderScore{
+    font-weight:bold;
+}
+
+/* =========================
+   SETTINGS
+========================= */
+
+.settingLine{
+    color:#b9d4e9;
+    font-size:14px;
+    margin:10px 0;
+}
+
+/* =========================
+   HUD
+========================= */
+
+#hud{
+    position:absolute;
+    top:10px;
+    left:8px;
+    right:8px;
+    z-index:20;
+    display:none;
+    justify-content:space-between;
+    gap:5px;
+    pointer-events:none;
+}
+
+.hudBox{
+    background:rgba(0,0,0,.58);
+    color:white;
+    padding:7px 9px;
+    border-radius:10px;
+    font-weight:bold;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+#pauseBtn{
+    position:absolute;
+    top:57px;
+    right:10px;
+    z-index:25;
+    width:40px;
+    height:40px;
+    border:0;
+    border-radius:50%;
+    background:rgba(0,0,0,.55);
+    color:white;
+    font-size:19px;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+#controls{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:18px;
+    z-index:20;
+    display:none;
+    justify-content:space-between;
+    padding:0 22px;
+    pointer-events:none;
+}
+
+.control{
+    width:72px;
+    height:58px;
+    border-radius:17px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.48);
+    color:white;
+    font-size:32px;
+    pointer-events:auto;
+    border:1px solid rgba(255,255,255,.15);
+}
+
+/* =========================
+   COUNTDOWN
+========================= */
+
+#countdown{
+    z-index:80;
+    background:rgba(0,0,0,.18);
+    color:white;
+    font-size:90px;
+    font-weight:bold;
+    text-shadow:0 5px 20px #000;
+}
+
+/* =========================
+   PAUSE
+========================= */
+
+#pauseScreen{
+    z-index:90;
+    background:rgba(0,0,0,.68);
+    text-align:center;
+}
+
+.pauseBox{
+    width:85%;
+    padding:25px;
+    border-radius:20px;
+    background:#142b43;
+    color:white;
+}
+
+.pauseBox h1{
+    color:#ffd83d;
+    margin-bottom:15px;
+}
+
+/* =========================
+   GAME OVER
+========================= */
+
+#gameOver{
+    z-index:150;
+    background:rgba(0,0,0,.75);
+}
+
+.gameOverBox{
+    text-align:center;
+    background:#f5f7fa;
+    color:#17202a;
+}
+
+.gameOverBox h1{
+    color:#e53935;
+    margin-bottom:12px;
+}
+
+.gameOverBox p{
+    margin:7px;
+    font-size:17px;
+}
+
+/* =========================
+   MOBILE TIP
+========================= */
+
+.mobileTip{
+    color:#8fc6e7;
+    font-size:12px;
+    margin-top:10px;
+}
+
+/* =========================
+   CUSTOM AUDIO
+========================= */
+
+#audioFile{
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="phone">
+
+<canvas id="game"></canvas>
+
+<!-- SPLASH -->
+<div id="splash" class="overlay">
+    <div class="splashBox">
+        <div class="logoCircle">🏎️</div>
+        <h1>HIGHWAY RUSH 3D</h1>
+        <p>THIS GAME BY :- RAUSHAN SINGH</p>
+        <div class="loading"><span></span></div>
+    </div>
+</div>
+
+<!-- NAME -->
+<div id="nameScreen" class="overlay hidden">
+    <div class="nameBox">
+        <h1>👤 PLAYER NAME</h1>
+        <p>
+            Enter your name.<br>
+            You can change it later from Settings.
+        </p>
+
+        <input
+            id="playerNameInput"
+            class="textInput"
+            maxlength="18"
+            placeholder="Your name">
+
+        <button class="bigButton" onclick="saveFirstName()">
+            SAVE & CONTINUE
+        </button>
+    </div>
+</div>
+
+<!-- MENU -->
+<div id="menu" class="overlay hidden">
+    <div class="menuBox">
+
+        <h1>HIGHWAY RUSH</h1>
+
+        <div class="welcome">
+            Welcome,
+            <b id="menuPlayerName">Player</b>
+        </div>
+
+        <div class="menuStats">
+            <div class="stat">
+                🪙 <span id="menuCoins">0</span>
+            </div>
+
+            <div class="stat">
+                🏆 <span id="menuBest">0</span>
+            </div>
+
+            <div class="stat">
+                🚘 <span id="menuVehicle">Car</span>
+            </div>
+        </div>
+
+        <button class="menuButton start" onclick="startGame()">
+            ▶ START GAME
+        </button>
+
+        <button class="menuButton garage"
+                onclick="togglePanel('garagePanel')">
+            🚘 GARAGE / SHOP
+        </button>
+
+        <button class="menuButton leader"
+                onclick="showLeaderboard()">
+            🏆 LEADERBOARD
+        </button>
+
+        <button class="menuButton settings"
+                onclick="togglePanel('settingsPanel')">
+            ⚙ SETTINGS
+        </button>
+
+        <!-- GARAGE -->
+        <div id="garagePanel" class="panel">
+
+            <div class="panelTitle">
+                🚘 VEHICLE GARAGE
+            </div>
+
+            <div id="vehicleGrid" class="vehicleGrid"></div>
+
+            <div class="panelTitle" style="margin-top:14px">
+                🎨 VEHICLE COLOUR
+            </div>
+
+            <div class="colorRow">
+
+                <div class="colorDot active"
+                     style="background:#e53935"
+                     onclick="setVehicleColor('#e53935',this)">
+                </div>
+
+                <div class="colorDot"
+                     style="background:#1976d2"
+                     onclick="setVehicleColor('#1976d2',this)">
+                </div>
+
+                <div class="colorDot"
+                     style="background:#20a94b"
+                     onclick="setVehicleColor('#20a94b',this)">
+                </div>
+
+                <div class="colorDot"
+                     style="background:#f1c40f"
+                     onclick="setVehicleColor('#f1c40f',this)">
+                </div>
+
+                <div class="colorDot"
+                     style="background:#111"
+                     onclick="setVehicleColor('#111111',this)">
+                </div>
+
+                <div class="colorDot"
+                     style="background:#fff"
+                     onclick="setVehicleColor('#ffffff',this)">
+                </div>
+
+            </div>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div id="leaderPanel" class="panel">
+            <div class="panelTitle">🏆 TOP PLAYERS</div>
+            <div id="leaderboardList"></div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="settingsPanel" class="panel">
+
+            <div class="panelTitle">⚙ SETTINGS</div>
+
+            <input
+                id="changeNameInput"
+                class="textInput"
+                maxlength="18"
+                placeholder="New player name">
+
+            <button class="menuButton settings"
+                    onclick="changeName()">
+                CHANGE PLAYER NAME
+            </button>
+
+            <button class="menuButton"
+                    style="background:#34495e"
+                    onclick="toggleSound()">
+                🔊 SOUND:
+                <span id="soundStatus">ON</span>
+            </button>
+
+            <button class="menuButton"
+                    style="background:#6c3483"
+                    onclick="document.getElementById('audioFile').click()">
+                🎵 USE MY PHONK MP3
+            </button>
+
+            <input
+                id="audioFile"
+                type="file"
+                accept="audio/*"
+                onchange="loadCustomMusic(event)">
+
+            <div class="settingLine">
+                Built-in phonk-style beat is generated by the game.
+            </div>
+
+            <button class="menuButton red"
+                    onclick="resetGameData()">
+                RESET ALL GAME DATA
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+
+    <div class="hudBox">
+        🏆 <span id="score">0</span>
+    </div>
+
+    <div class="hudBox">
+        🪙 <span id="coins">0</span>
+    </div>
+
+    <div class="hudBox">
+        ⚡ <span id="speedHud">1.0x</span>
+    </div>
+
+</div>
+
+<button id="pauseBtn"
+        class="hidden"
+        onclick="togglePause()">
+    ⏸
+</button>
+
+<!-- CONTROLS -->
+<div id="controls">
+
+    <div id="left" class="control">◀</div>
+    <div id="right" class="control">▶</div>
+
+</div>
+
+<!-- COUNTDOWN -->
+<div id="countdown"
+     class="overlay hidden">
+    3
+</div>
+
+<!-- PAUSE -->
+<div id="pauseScreen"
+     class="overlay hidden">
+
+    <div class="pauseBox">
+
+        <h1>⏸ PAUSED</h1>
+
+        <button class="menuButton start"
+                onclick="togglePause()">
+            ▶ RESUME
+        </button>
+
+        <button class="menuButton gray"
+                onclick="backToMenu()">
+            🏠 MAIN MENU
+        </button>
+
+    </div>
+
+</div>
+
+<!-- GAME OVER -->
+<div id="gameOver"
+     class="overlay hidden">
+
+    <div class="gameOverBox">
+
+        <h1>GAME OVER</h1>
+
+        <p>
+            Player:
+            <b id="finalName"></b>
+        </p>
+
+        <p>
+            🏆 Score:
+            <b id="finalScore">0</b>
+        </p>
+
+        <p>
+            🪙 Coins:
+            <b id="finalCoins">0</b>
+        </p>
+
+        <p>
+            🥇 Best:
+            <b id="finalBest">0</b>
+        </p>
+
+        <button class="menuButton start"
+                onclick="restartGame()">
+            🔄 PLAY AGAIN
+        </button>
+
+        <button class="menuButton gray"
+                onclick="backToMenu()">
+            🏠 MAIN MENU
+        </button>
+
+    </div>
+</div>
+
+<script>
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+const canvas =
+document.getElementById("game");
+
+const ctx =
+canvas.getContext("2d");
+
+let W=0;
+let H=0;
+
+function resize(){
+
+    const phone =
+    document.getElementById("phone");
+
+    W=phone.clientWidth;
+    H=phone.clientHeight;
+
+    const dpr =
+    Math.min(
+        window.devicePixelRatio || 1,
+        2
+    );
+
+    canvas.width=W*dpr;
+    canvas.height=H*dpr;
+
+    canvas.style.width=W+"px";
+    canvas.style.height=H+"px";
+
+    ctx.setTransform(
+        dpr,0,0,dpr,0,0
+    );
+}
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+resize();
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+let playerName =
+localStorage.getItem("hr3d_playerName") || "";
+
+let walletCoins =
+Number(localStorage.getItem("hr3d_coins")) || 0;
+
+let highScore =
+Number(localStorage.getItem("hr3d_highScore")) || 0;
+
+let leaderboard =
+JSON.parse(
+    localStorage.getItem("hr3d_leaderboard") || "[]"
+);
+
+let purchased =
+JSON.parse(
+    localStorage.getItem(
+        "hr3d_purchased"
+    ) || '["car"]'
+);
+
+let selectedVehicle =
+localStorage.getItem(
+    "hr3d_vehicle"
+) || "car";
+
+let vehicleColor =
+localStorage.getItem(
+    "hr3d_color"
+) || "#e53935";
+
+let soundOn =
+localStorage.getItem("hr3d_sound") !== "off";
+
+
+/* =========================================================
+   VEHICLES
+========================================================= */
+
+const vehicles = {
+
+    car:{
+        name:"Real Sports Car",
+        icon:"🏎️",
+        price:0
+    },
+
+    bike:{
+        name:"Super Bike",
+        icon:"🏍️",
+        price:150
+    },
+
+    bus:{
+        name:"City Bus",
+        icon:"🚌",
+        price:300
+    },
+
+    plane:{
+        name:"Road Plane",
+        icon:"✈️",
+        price:600
+    },
+
+    man:{
+        name:"Runner",
+        icon:"🏃",
+        price:900
+    }
+
+};
+
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let gameRunning=false;
+let paused=false;
+let countdownRunning=false;
+
+let score=0;
+let runCoins=0;
+
+let speed=5.2;
+
+let playerLane=1;
+
+let spawnTimer=70;
+
+let roadOffset=0;
+
+let objects=[];
+let worldItems=[];
+
+
+/* =========================================================
+   AUDIO ENGINE
+========================================================= */
+
+let audioCtx=null;
+
+let musicTimer=null;
+let musicStep=0;
+
+let engineOsc=null;
+let engineGain=null;
+
+let customAudio=null;
+
+function initAudio(){
+
+    if(!audioCtx){
+
+        audioCtx =
+        new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+    }
+
+    if(
+        audioCtx.state==="suspended"
+    ){
+
+        audioCtx.resume();
+    }
+}
+
+
+function tone(
+    frequency,
+    duration,
+    type="sine",
+    volume=.035
+){
+
+    if(!soundOn)
+        return;
+
+    try{
+
+        initAudio();
+
+        const osc =
+        audioCtx.createOscillator();
+
+        const gain =
+        audioCtx.createGain();
+
+        osc.type=type;
+
+        osc.frequency.setValueAtTime(
+            frequency,
+            audioCtx.currentTime
+        );
+
+        gain.gain.setValueAtTime(
+            volume,
+            audioCtx.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            audioCtx.currentTime+duration
+        );
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+
+        osc.stop(
+            audioCtx.currentTime+duration
+        );
+
+    }catch(e){}
+}
+
+
+/* =========================================================
+   PHONK STYLE PROCEDURAL BEAT
+========================================================= */
+
+function kick(){
+
+    tone(
+        75,
+        .16,
+        "sine",
+        .10
+    );
+}
+
+function snare(){
+
+    tone(
+        180,
+        .07,
+        "square",
+        .025
+    );
+
+    tone(
+        900,
+        .045,
+        "triangle",
+        .018
+    );
+}
+
+function hat(){
+
+    tone(
+        5000,
+        .025,
+        "square",
+        .012
+    );
+}
+
+function bass(note){
+
+    tone(
+        note,
+        .16,
+        "sawtooth",
+        .025
+    );
+}
+
+
+function musicTick(){
+
+    if(
+        !gameRunning ||
+        paused ||
+        !soundOn
+    )
+        return;
+
+    const step =
+    musicStep % 16;
+
+    if(
+        step===0 ||
+        step===6 ||
+        step===8 ||
+        step===14
+    ){
+
+        kick();
+    }
+
+    if(
+        step===4 ||
+        step===12
+    ){
+
+        snare();
+    }
+
+    if(
+        step%2===0
+    ){
+
+        hat();
+    }
+
+    const notes=[
+        73,
+        73,
+        87,
+        65,
+        73,
+        98,
+        87,
+        65
+    ];
+
+    if(
+        step%2===0
+    ){
+
+        bass(
+            notes[
+                Math.floor(step/2)
+            ]
+        );
+    }
+
+    musicStep++;
+}
+
+
+function startMusic(){
+
+    if(
+        !soundOn ||
+        customAudio
+    )
+        return;
+
+    initAudio();
+
+    stopMusic();
+
+    musicStep=0;
+
+    musicTimer =
+    setInterval(
+        musicTick,
+        125
+    );
+}
+
+
+function stopMusic(){
+
+    if(musicTimer){
+
+        clearInterval(
+            musicTimer
+        );
+
+        musicTimer=null;
+    }
+}
+
+
+/* =========================================================
+   ENGINE SOUND
+========================================================= */
+
+function startEngine(){
+
+    if(
+        !soundOn ||
+        !audioCtx
+    )
+        return;
+
+    try{
+
+        engineOsc =
+        audioCtx.createOscillator();
+
+        engineGain =
+        audioCtx.createGain();
+
+        engineOsc.type="sawtooth";
+
+        engineOsc.frequency.value=70;
+
+        engineGain.gain.value=.012;
+
+        engineOsc.connect(
+            engineGain
+        );
+
+        engineGain.connect(
+            audioCtx.destination
+        );
+
+        engineOsc.start();
+
+    }catch(e){}
+}
+
+
+function updateEngine(){
+
+    if(
+        !engineOsc ||
+        !engineGain
+    )
+        return;
+
+    engineOsc.frequency.value =
+    65 + speed*8;
+}
+
+
+function stopEngine(){
+
+    try{
+
+        if(engineOsc){
+
+            engineOsc.stop();
+            engineOsc.disconnect();
+
+        }
+
+    }catch(e){}
+
+    engineOsc=null;
+    engineGain=null;
+}
+
+
+/* =========================================================
+   SOUND EFFECTS
+========================================================= */
+
+function coinSound(){
+
+    tone(
+        850,
+        .07,
+        "square",
+        .045
+    );
+
+    setTimeout(
+        ()=>{
+            tone(
+                1250,
+                .09,
+                "square",
+                .035
+            );
+        },
+        65
+    );
+}
+
+
+function giftSound(){
+
+    tone(
+        500,
+        .08,
+        "triangle",
+        .04
+    );
+
+    setTimeout(
+        ()=>{
+            tone(
+                800,
+                .10,
+                "triangle",
+                .045
+            );
+        },
+        70
+    );
+
+    setTimeout(
+        ()=>{
+            tone(
+                1200,
+                .12,
+                "triangle",
+                .04
+            );
+        },
+        140
+    );
+}
+
+
+function crashSound(){
+
+    tone(
+        90,
+        .30,
+        "sawtooth",
+        .09
+    );
+
+    setTimeout(
+        ()=>{
+            tone(
+                50,
+                .40,
+                "square",
+                .07
+            );
+        },
+        100
+    );
+}
+
+
+function moveSound(){
+
+    tone(
+        350,
+        .055,
+        "sine",
+        .025
+    );
+}
+
+
+function buttonSound(){
+
+    tone(
+        450,
+        .055,
+        "sine",
+        .025
+    );
+}
+
+
+/* =========================================================
+   CUSTOM MP3
+========================================================= */
+
+function loadCustomMusic(event){
+
+    const file =
+    event.target.files[0];
+
+    if(!file)
+        return;
+
+    if(customAudio){
+
+        customAudio.pause();
+        customAudio=null;
+    }
+
+    const url =
+    URL.createObjectURL(file);
+
+    customAudio =
+    new Audio(url);
+
+    customAudio.loop=true;
+    customAudio.volume=.35;
+
+    stopMusic();
+
+    customAudio.play()
+    .catch(()=>{});
+
+    alert(
+        "Your music is loaded. It will play while the game is running."
+    );
+}
+
+
+/* =========================================================
+   NAME
+========================================================= */
+
+function checkFirstLaunch(){
+
+    if(!playerName){
+
+        document
+        .getElementById("nameScreen")
+        .classList.remove("hidden");
+
+    }else{
+
+        showMenu();
+    }
+}
+
+
+function saveFirstName(){
+
+    const input =
+    document.getElementById(
+        "playerNameInput"
+    );
+
+    const name =
+    input.value.trim();
+
+    if(!name){
+
+        alert(
+            "Please enter your name."
+        );
+
+        return;
+    }
+
+    playerName =
+    name.substring(0,18);
+
+    localStorage.setItem(
+        "hr3d_playerName",
+        playerName
+    );
+
+    document
+    .getElementById("nameScreen")
+    .classList.add("hidden");
+
+    showMenu();
+}
+
+
+function changeName(){
+
+    const input =
+    document.getElementById(
+        "changeNameInput"
+    );
+
+    const name =
+    input.value.trim();
+
+    if(!name)
+        return;
+
+    playerName =
+    name.substring(0,18);
+
+    localStorage.setItem(
+        "hr3d_playerName",
+        playerName
+    );
+
+    input.value="";
+
+    updateMenu();
+
+    buttonSound();
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+function showMenu(){
+
+    gameRunning=false;
+    paused=false;
+
+    stopMusic();
+    stopEngine();
+
+    document
+    .getElementById("menu")
+    .classList.remove("hidden");
+
+    document
+    .getElementById("hud")
+    .style.display="none";
+
+    document
+    .getElementById("controls")
+    .style.display="none";
+
+    document
+    .getElementById("pauseBtn")
+    .classList.add("hidden");
+
+    updateMenu();
+
+    renderGarage();
+    renderLeaderboard();
+}
+
+
+function updateMenu(){
+
+    document.getElementById(
+        "menuPlayerName"
+    ).textContent=playerName;
+
+    document.getElementById(
+        "menuCoins"
+    ).textContent=walletCoins;
+
+    document.getElementById(
+        "menuBest"
+    ).textContent=highScore;
+
+    document.getElementById(
+        "menuVehicle"
+    ).textContent=
+    vehicles[selectedVehicle].name;
+}
+
+
+function togglePanel(id){
+
+    const all=[
+        "garagePanel",
+        "leaderPanel",
+        "settingsPanel"
+    ];
+
+    all.forEach(
+        panel=>{
+            document
+            .getElementById(panel)
+            .style.display=
+            "none";
+        }
+    );
+
+    const target =
+    document.getElementById(id);
+
+    target.style.display =
+    "block";
+
+    buttonSound();
+}
+
+
+/* =========================================================
+   GARAGE
+========================================================= */
+
+function renderGarage(){
+
+    const grid =
+    document.getElementById(
+        "vehicleGrid"
+    );
+
+    grid.innerHTML="";
+
+    Object.keys(
+        vehicles
+    ).forEach(
+        key=>{
+
+            const v =
+            vehicles[key];
+
+            const owned =
+            purchased.includes(key);
+
+            const selected =
+            selectedVehicle===key;
+
+            const card =
+            document.createElement("div");
+
+            card.className =
+            "vehicleCard"+
+            (selected
+                ? " selected"
+                : "");
+
+            let action="";
+
+            let cls="";
+
+            if(selected){
+
+                action="SELECTED";
+
+            }else if(owned){
+
+                action="SELECT";
+
+            }else{
+
+                action=
+                "BUY 🪙 "+
+                v.price;
+
+                cls="buy";
+            }
+
+            card.innerHTML=`
+
+                <div class="vehicleIcon">
+                    ${v.icon}
+                </div>
+
+                <div class="vehicleName">
+                    ${v.name}
+                </div>
+
+                <div class="vehiclePrice">
+                    ${
+                        owned
+                        ? "OWNED"
+                        : "🪙 "+v.price
+                    }
+                </div>
+
+                <button
+                    class="vehicleAction ${cls}"
+                    onclick="vehicleAction('${key}')">
+
+                    ${action}
+
+                </button>
+            `;
+
+            grid.appendChild(card);
+        }
+    );
+}
+
+
+function vehicleAction(key){
+
+    const vehicle =
+    vehicles[key];
+
+    if(
+        purchased.includes(key)
+    ){
+
+        selectedVehicle=key;
+
+        localStorage.setItem(
+            "hr3d_vehicle",
+            key
+        );
+
+        renderGarage();
+        updateMenu();
+
+        buttonSound();
+
+        return;
+    }
+
+    if(
+        walletCoins >= vehicle.price
+    ){
+
+        walletCoins -=
+        vehicle.price;
+
+        purchased.push(key);
+
+        selectedVehicle=key;
+
+        localStorage.setItem(
+            "hr3d_coins",
+            walletCoins
+        );
+
+        localStorage.setItem(
+            "hr3d_purchased",
+            JSON.stringify(purchased)
+        );
+
+        localStorage.setItem(
+            "hr3d_vehicle",
+            key
+        );
+
+        renderGarage();
+        updateMenu();
+
+        tone(
+            750,
+            .08,
+            "square",
+            .05
+        );
+
+    }else{
+
+        alert(
+            "Not enough coins!"
+        );
+    }
+}
+
+
+function setVehicleColor(
+    color,
+    element
+){
+
+    vehicleColor=color;
+
+    localStorage.setItem(
+        "hr3d_color",
+        color
+    );
+
+    document
+    .querySelectorAll(".colorDot")
+    .forEach(
+        d=>
+        d.classList.remove("active")
+    );
+
+    element.classList.add("active");
+
+    buttonSound();
+}
+
+
+/* =========================================================
+   LEADERBOARD
+========================================================= */
+
+function saveLeaderboard(){
+
+    leaderboard.push({
+
+        name:playerName,
+
+        score:Math.floor(score),
+
+        time:Date.now()
+
+    });
+
+    leaderboard.sort(
+        (a,b)=>
+        b.score-a.score
+    );
+
+    leaderboard =
+    leaderboard.slice(0,20);
+
+    localStorage.setItem(
+        "hr3d_leaderboard",
+        JSON.stringify(leaderboard)
+    );
+}
+
+
+function renderLeaderboard(){
+
+    const list =
+    document.getElementById(
+        "leaderboardList"
+    );
+
+    if(
+        leaderboard.length===0
+    ){
+
+        list.innerHTML =
+        "<p>No scores yet. Be the first!</p>";
+
+        return;
+    }
+
+    list.innerHTML="";
+
+    leaderboard.forEach(
+        (item,index)=>{
+
+            const row =
+            document.createElement("div");
+
+            row.className="leaderRow";
+
+            row.innerHTML=`
+
+                <div class="rank">
+                    #${index+1}
+                </div>
+
+                <div class="leaderName">
+                    ${escapeHTML(item.name)}
+                </div>
+
+                <div class="leaderScore">
+                    ${item.score}
+                </div>
+
+            `;
+
+            list.appendChild(row);
+        }
+    );
+}
+
+
+function showLeaderboard(){
+
+    togglePanel(
+        "leaderPanel"
+    );
+
+    renderLeaderboard();
+}
+
+
+function escapeHTML(str){
+
+    return String(str)
+    .replace(
+        /[&<>"']/g,
+        m=>({
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+        }[m])
+    );
+}
+
+
+/* =========================================================
+   SOUND SETTINGS
+========================================================= */
+
+function toggleSound(){
+
+    soundOn=!soundOn;
+
+    localStorage.setItem(
+        "hr3d_sound",
+        soundOn
+        ? "on"
+        : "off"
+    );
+
+    document.getElementById(
+        "soundStatus"
+    ).textContent =
+    soundOn
+    ? "ON"
+    : "OFF";
+
+    if(!soundOn){
+
+        stopMusic();
+        stopEngine();
+
+        if(customAudio)
+            customAudio.pause();
+
+    }else{
+
+        initAudio();
+        buttonSound();
+    }
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGameData(){
+
+    if(
+        !confirm(
+            "Reset all game data?"
+        )
+    )
+        return;
+
+    [
+        "hr3d_playerName",
+        "hr3d_coins",
+        "hr3d_highScore",
+        "hr3d_leaderboard",
+        "hr3d_purchased",
+        "hr3d_vehicle",
+        "hr3d_color",
+        "hr3d_sound"
+    ].forEach(
+        key=>
+        localStorage.removeItem(key)
+    );
+
+    location.reload();
+}
+
+
+/* =========================================================
+   ROAD
+========================================================= */
+
+const horizonRatio=.285;
+
+function horizon(){
+
+    return H*horizonRatio;
+}
+
+
+/*
+   Wider + perfectly straight road.
+*/
+
+function roadWidth(y){
+
+    const hy=horizon();
+
+    const t=
+    Math.max(
+        0,
+        Math.min(
+            1,
+            (y-hy)/
+            (H-hy)
+        )
+    );
+
+    const far=
+    W*.34;
+
+    const near=
+    W*.96;
+
+    return far+
+    (near-far)*t;
+}
+
+
+function laneX(
+    lane,
+    y
+){
+
+    return W/2 -
+    roadWidth(y)/2 +
+    roadWidth(y)*
+    (lane+.5)/3;
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+function startGame(){
+
+    initAudio();
+
+    buttonSound();
+
+    document
+    .getElementById("menu")
+    .classList.add("hidden");
+
+    document
+    .getElementById("gameOver")
+    .classList.add("hidden");
+
+    document
+    .getElementById("pauseScreen")
+    .classList.add("hidden");
+
+    score=0;
+    runCoins=0;
+
+    speed=5.2;
+
+    playerLane=1;
+
+    spawnTimer=65;
+
+    roadOffset=0;
+
+    objects=[];
+
+    createWorld();
+
+    gameRunning=true;
+    paused=false;
+
+    document
+    .getElementById("hud")
+    .style.display="flex";
+
+    document
+    .getElementById("controls")
+    .style.display="flex";
+
+    document
+    .getElementById("pauseBtn")
+    .classList.remove("hidden");
+
+    startCountdown();
+
+    if(customAudio){
+
+        customAudio.currentTime=0;
+
+        if(soundOn){
+
+            customAudio.play()
+            .catch(()=>{});
+        }
+
+    }else{
+
+        startMusic();
+    }
+
+    startEngine();
+}
+
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+function startCountdown(){
+
+    countdownRunning=true;
+
+    const box =
+    document.getElementById(
+        "countdown"
+    );
+
+    box.classList.remove("hidden");
+
+    let n=3;
+
+    box.textContent=n;
+
+    const timer =
+    setInterval(
+        ()=>{
+
+            n--;
+
+            if(n>0){
+
+                box.textContent=n;
+
+                tone(
+                    600,
+                    .08,
+                    "square",
+                    .04
+                );
+
+            }else{
+
+                box.textContent="GO!";
+
+                tone(
+                    1000,
+                    .15,
+                    "square",
+                    .05
+                );
+
+                setTimeout(
+                    ()=>{
+
+                        box.classList.add(
+                            "hidden"
+                        );
+
+                        countdownRunning=false;
+
+                    },
+                    400
+                );
+
+                clearInterval(timer);
+            }
+
+        },
+        800
+    );
+}
+
+
+/* =========================================================
+   SKY
+========================================================= */
+
+function drawSky(){
+
+    const g =
+    ctx.createLinearGradient(
+        0,
+        0,
+        0,
+        H
+    );
+
+    g.addColorStop(
+        0,
+        "#1598dc"
+    );
+
+    g.addColorStop(
+        .48,
+        "#79d8fa"
+    );
+
+    g.addColorStop(
+        1,
+        "#d9f7ff"
+    );
+
+    ctx.fillStyle=g;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+}
+
+
+function drawCloud(
+    x,
+    y,
+    s
+){
+
+    ctx.fillStyle=
+    "rgba(255,255,255,.75)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        18*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+22*s,
+        y-9*s,
+        25*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+50*s,
+        y,
+        18*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+}
+
+
+/* =========================================================
+   GROUND
+========================================================= */
+
+function drawGround(){
+
+    const hy=horizon();
+
+    ctx.fillStyle="#3e9743";
+
+    ctx.fillRect(
+        0,
+        hy,
+        W,
+        H-hy
+    );
+
+    /*
+       Grass stripes
+    */
+
+    ctx.fillStyle=
+    "rgba(255,255,255,.035)";
+
+    for(
+        let y=hy;
+        y<H;
+        y+=35
+    ){
+
+        ctx.fillRect(
+            0,
+            y,
+            W,
+            2
+        );
+    }
+}
+
+
+/* =========================================================
+   WORLD
+========================================================= */
+
+function createWorld(){
+
+    worldItems=[];
+
+    for(
+        let i=0;
+        i<24;
+        i++
+    ){
+
+        const type =
+        Math.random()<.65
+        ? "tree"
+        : "building";
+
+        worldItems.push({
+
+            side:
+            Math.random()<.5
+            ? -1
+            : 1,
+
+            y:
+            horizon()+
+            40+
+            i*95,
+
+            type:type,
+
+            size:
+            type==="tree"
+            ? 80+Math.random()*65
+            : 100+Math.random()*80,
+
+            color:[
+                "#b85b4b",
+                "#596c82",
+                "#c77e38",
+                "#7c5a99",
+                "#47768b"
+            ][
+                Math.floor(
+                    Math.random()*5
+                )
+            ]
+        });
+    }
+}
+
+
+function updateWorld(){
+
+    /*
+       Much slower than road.
+    */
+
+    const scenerySpeed =
+    Math.max(
+        .8,
+        speed*.22
+    );
+
+    for(
+        const item of worldItems
+    ){
+
+        item.y+=scenerySpeed;
+
+        if(
+            item.y>H+180
+        ){
+
+            item.y=
+            horizon()+
+            30+
+            Math.random()*80;
+
+            item.side =
+            Math.random()<.5
+            ? -1
+            : 1;
+
+            item.type =
+            Math.random()<.65
+            ? "tree"
+            : "building";
+        }
+    }
+}
+
+
+function drawWorld(){
+
+    worldItems.sort(
+        (a,b)=>
+        a.y-b.y
+    );
+
+    for(
+        const item of worldItems
+    ){
+
+        if(
+            item.y<horizon()
+        )
+            continue;
+
+        const distance =
+        roadWidth(item.y)/2+
+        45;
+
+        const x =
+        W/2+
+        item.side*
+        distance;
+
+        if(
+            item.type==="tree"
+        ){
+
+            drawTree(
+                x,
+                item.y,
+                item.size
+            );
+
+        }else{
+
+            drawBuilding(
+                x,
+                item.y,
+                item.size,
+                item.size*1.5,
+                item.color
+            );
+        }
+    }
+}
+
+
+/* =========================================================
+   TREE
+========================================================= */
+
+function drawTree(
+    x,
+    y,
+    size
+){
+
+    const t =
+    Math.max(
+        .05,
+        (y-horizon())/
+        (H-horizon())
+    );
+
+    const s =
+    size*t;
+
+    if(s<2)
+        return;
+
+    ctx.fillStyle=
+    "rgba(0,0,0,.15)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        y,
+        s*.55,
+        s*.13,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#70452c";
+
+    ctx.fillRect(
+        x-s*.08,
+        y-s*.75,
+        s*.16,
+        s*.75
+    );
+
+    ctx.fillStyle="#176c2c";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-s*.92,
+        s*.35,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x-s*.28,
+        y-s*.70,
+        s*.30,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+s*.28,
+        y-s*.70,
+        s*.30,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#2e9944";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x-s*.12,
+        y-s*1.02,
+        s*.15,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+}
+
+
+/* =========================================================
+   BUILDING
+========================================================= */
+
+function drawBuilding(
+    x,
+    y,
+    width,
+    height,
+    color
+){
+
+    const t =
+    Math.max(
+        .04,
+        (y-horizon())/
+        (H-horizon())
+    );
+
+    const w=width*t;
+    const h=height*t;
+
+    if(w<2 || h<2)
+        return;
+
+    x-=w/2;
+
+    ctx.fillStyle=color;
+
+    ctx.fillRect(
+        x,
+        y-h,
+        w,
+        h
+    );
+
+    ctx.fillStyle=
+    "rgba(0,0,0,.2)";
+
+    ctx.fillRect(
+        x,
+        y-h,
+        w,
+        4*t
+    );
+
+    for(
+        let r=0;
+        r<5;
+        r++
+    ){
+
+        for(
+            let c=0;
+            c<3;
+            c++
+        ){
+
+            ctx.fillStyle =
+            (r+c)%2
+            ? "#b7e8ff"
+            : "#ffe87c";
+
+            ctx.fillRect(
+                x+w*.14+c*w*.29,
+                y-h+h*.14+r*h*.15,
+                Math.max(2,w*.12),
+                Math.max(2,h*.07)
+            );
+        }
+    }
+}
+
+
+/* =========================================================
+   ROAD
+========================================================= */
+
+function drawRoad(){
+
+    const hy=horizon();
+    const bottom=H+80;
+
+    /*
+       Straight wide road
+    */
+
+    ctx.fillStyle="#303238";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        W/2-roadWidth(hy)/2,
+        hy
+    );
+
+    ctx.lineTo(
+        W/2+roadWidth(hy)/2,
+        hy
+    );
+
+    ctx.lineTo(
+        W/2+roadWidth(bottom)/2,
+        bottom
+    );
+
+    ctx.lineTo(
+        W/2-roadWidth(bottom)/2,
+        bottom
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    /*
+       Road texture
+    */
+
+    ctx.fillStyle=
+    "rgba(255,255,255,.025)";
+
+    for(
+        let y=hy;
+        y<H;
+        y+=24
+    ){
+
+        ctx.fillRect(
+            W/2-roadWidth(y)/2,
+            y,
+            roadWidth(y),
+            1
+        );
+    }
+
+    /*
+       Wide white edge lines
+    */
+
+    ctx.strokeStyle="#f5f5f5";
+
+    ctx.lineWidth=4;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        W/2-roadWidth(hy)/2,
+        hy
+    );
+
+    ctx.lineTo(
+        W/2-roadWidth(bottom)/2,
+        bottom
+    );
+
+    ctx.moveTo(
+        W/2+roadWidth(hy)/2,
+        hy
+    );
+
+    ctx.lineTo(
+        W/2+roadWidth(bottom)/2,
+        bottom
+    );
+
+    ctx.stroke();
+
+
+    /*
+       Perspective dashed lane markings.
+       No unwanted continuous lines.
+    */
+
+    roadOffset +=
+    speed*.004;
+
+    if(roadOffset>1)
+        roadOffset-=1;
+
+    for(
+        let lane=1;
+        lane<3;
+        lane++
+    ){
+
+        for(
+            let i=0;
+            i<12;
+            i++
+        ){
+
+            let d =
+            (i/12+roadOffset)%1;
+
+            const startDepth=d;
+            const endDepth=
+            Math.min(
+                1,
+                d+.055+
+                d*.045
+            );
+
+            const y1 =
+            hy+
+            Math.pow(
+                startDepth,
+                1.65
+            )*
+            (H-hy);
+
+            const y2 =
+            hy+
+            Math.pow(
+                endDepth,
+                1.65
+            )*
+            (H-hy);
+
+            if(
+                y1<hy ||
+                y1>H+20
+            )
+                continue;
+
+            const x1 =
+            W/2-
+            roadWidth(y1)/2+
+            roadWidth(y1)*
+            lane/3;
+
+            const x2 =
+            W/2-
+            roadWidth(y2)/2+
+            roadWidth(y2)*
+            lane/3;
+
+            const t =
+            (y1-hy)/
+            (H-hy);
+
+            ctx.strokeStyle=
+            "rgba(255,255,255,.9)";
+
+            ctx.lineWidth=
+            1.5+t*5;
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x1,
+                y1
+            );
+
+            ctx.lineTo(
+                x2,
+                y2
+            );
+
+            ctx.stroke();
+        }
+    }
+}
+
+
+/* =========================================================
+   VEHICLE SHADOW
+========================================================= */
+
+function shadow(
+    x,
+    y,
+    w
+){
+
+    ctx.fillStyle=
+    "rgba(0,0,0,.35)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        y,
+        w,
+        12,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+function drawPlayer(){
+
+    const y =
+    H*.81;
+
+    const x =
+    laneX(
+        playerLane,
+        y
+    );
+
+    if(selectedVehicle==="car")
+        drawRealCar(x,y);
+
+    else if(selectedVehicle==="bike")
+        drawBike(x,y);
+
+    else if(selectedVehicle==="bus")
+        drawBus(x,y);
+
+    else if(selectedVehicle==="plane")
+        drawPlane(x,y);
+
+    else
+        drawMan(x,y);
+}
+
+
+/* =========================================================
+   REALISTIC-STYLE CAR
+========================================================= */
+
+function drawRealCar(
+    x,
+    y
+){
+
+    const w=92;
+    const h=145;
+
+    shadow(
+        x,
+        y+68,
+        57
+    );
+
+    /*
+       Wheels
+    */
+
+    ctx.fillStyle="#090909";
+
+    roundRect(
+        x-w*.53,
+        y-34,
+        17,
+        48,
+        5
+    );
+
+    ctx.fill();
+
+    roundRect(
+        x+w*.35,
+        y-34,
+        17,
+        48,
+        5
+    );
+
+    ctx.fill();
+
+    roundRect(
+        x-w*.53,
+        y+27,
+        17,
+        43,
+        5
+    );
+
+    ctx.fill();
+
+    roundRect(
+        x+w*.35,
+        y+27,
+        17,
+        43,
+        5
+    );
+
+    ctx.fill();
+
+
+    /*
+       Tyre highlights
+    */
+
+    ctx.fillStyle="#555";
+
+    ctx.fillRect(
+        x-w*.47,
+        y-22,
+        5,
+        24
+    );
+
+    ctx.fillRect(
+        x+w*.41,
+        y-22,
+        5,
+        24
+    );
+
+
+    /*
+       Main body gradient
+    */
+
+    const body =
+    ctx.createLinearGradient(
+        x-w/2,
+        0,
+        x+w/2,
+        0
+    );
+
+    body.addColorStop(
+        0,
+        shade(vehicleColor,-55)
+    );
+
+    body.addColorStop(
+        .18,
+        shade(vehicleColor,-20)
+    );
+
+    body.addColorStop(
+        .48,
+        lighten(vehicleColor,18)
+    );
+
+    body.addColorStop(
+        .70,
+        vehicleColor
+    );
+
+    body.addColorStop(
+        1,
+        shade(vehicleColor,-45)
+    );
+
+    ctx.fillStyle=body;
+
+    roundRect(
+        x-w/2,
+        y-h/2,
+        w,
+        h,
+        21
+    );
+
+    ctx.fill();
+
+
+    /*
+       Lower bumper
+    */
+
+    ctx.fillStyle=
+    "rgba(0,0,0,.28)";
+
+    roundRect(
+        x-w*.43,
+        y+h*.25,
+        w*.86,
+        h*.22,
+        10
+    );
+
+    ctx.fill();
+
+
+    /*
+       Roof / cabin
+    */
+
+    const roof =
+    ctx.createLinearGradient(
+        0,
+        y-h*.45,
+        0,
+        y-h*.05
+    );
+
+    roof.addColorStop(
+        0,
+        "#293746"
+    );
+
+    roof.addColorStop(
+        1,
+        "#101820"
+    );
+
+    ctx.fillStyle=roof;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x-w*.36,
+        y-h*.08
+    );
+
+    ctx.lineTo(
+        x-w*.27,
+        y-h*.39
+    );
+
+    ctx.quadraticCurveTo(
+        x,
+        y-h*.48,
+        x+w*.27,
+        y-h*.39
+    );
+
+    ctx.lineTo(
+        x+w*.36,
+        y-h*.08
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /*
+       Front windshield
+    */
+
+    const glass =
+    ctx.createLinearGradient(
+        0,
+        y-h*.37,
+        0,
+        y-h*.10
+    );
+
+    glass.addColorStop(
+        0,
+        "#a9eaff"
+    );
+
+    glass.addColorStop(
+        .55,
+        "#35677d"
+    );
+
+    glass.addColorStop(
+        1,
+        "#142a35"
+    );
+
+    ctx.fillStyle=glass;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x-w*.23,
+        y-h*.35
+    );
+
+    ctx.lineTo(
+        x+w*.23,
+        y-h*.35
+    );
+
+    ctx.lineTo(
+        x+w*.29,
+        y-h*.13
+    );
+
+    ctx.lineTo(
+        x-w*.29,
+        y-h*.13
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /*
+       Windshield divider
+    */
+
+    ctx.strokeStyle="#18232b";
+
+    ctx.lineWidth=3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x,
+        y-h*.35
+    );
+
+    ctx.lineTo(
+        x,
+        y-h*.13
+    );
+
+    ctx.stroke();
+
+
+    /*
+       Side mirrors
+    */
+
+    ctx.fillStyle=
+    shade(vehicleColor,-35);
+
+    roundRect(
+        x-w*.56,
+        y-h*.08,
+        12,
+        23,
+        5
+    );
+
+    ctx.fill();
+
+    roundRect(
+        x+w*.43,
+        y-h*.08,
+        12,
+        23,
+        5
+    );
+
+    ctx.fill();
+
+
+    /*
+       LED headlights
+    */
+
+    const light =
+    ctx.createLinearGradient(
+        0,
+        y+h*.28,
+        0,
+        y+h*.43
+    );
+
+    light.addColorStop(
+        0,
+        "#ffffff"
+    );
+
+    light.addColorStop(
+        1,
+        "#ffd84a"
+    );
+
+    ctx.fillStyle=light;
+
+    roundRect(
+        x-w*.39,
+        y+h*.30,
+        w*.25,
+        15,
+        5
+    );
+
+    ctx.fill();
+
+    roundRect(
+        x+w*.14,
+        y+h*.30,
+        w*.25,
+        15,
+        5
+    );
+
+    ctx.fill();
+
+
+    /*
+       LED glow
+    */
+
+    ctx.shadowColor="#fff6a0";
+    ctx.shadowBlur=8;
+
+    ctx.fillStyle="#fffbd1";
+
+    ctx.fillRect(
+        x-w*.36,
+        y+h*.34,
+        w*.18,
+        3
+    );
+
+    ctx.fillRect(
+        x+w*.18,
+        y+h*.34,
+        w*.18,
+        3
+    );
+
+    ctx.shadowBlur=0;
+
+
+    /*
+       Front grille
+    */
+
+    ctx.fillStyle="#090b0d";
+
+    roundRect(
+        x-w*.31,
+        y+h*.37,
+        w*.62,
+        19,
+        7
+    );
+
+    ctx.fill();
+
+
+    /*
+       grille lines
+    */
+
+    ctx.strokeStyle="#667078";
+
+    ctx.lineWidth=1;
+
+    for(
+        let i=-3;
+        i<=3;
+        i++
+    ){
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+i*7,
+            y+h*.39
+        );
+
+        ctx.lineTo(
+            x+i*7,
+            y+h*.48
+        );
+
+        ctx.stroke();
+    }
+
+
+    /*
+       Small logo
+    */
+
+    ctx.fillStyle="#ffd83d";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y+h*.37,
+        4,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /*
+       Hood reflection
+    */
+
+    ctx.fillStyle=
+    "rgba(255,255,255,.18)";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x-w*.28,
+        y-h*.02
+    );
+
+    ctx.lineTo(
+        x-w*.08,
+        y-h*.02
+    );
+
+    ctx.lineTo(
+        x-w*.20,
+        y+h*.20
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /*
+       Red tail details
+    */
+
+    ctx.fillStyle="#ff3b30";
+
+    roundRect(
+        x-w*.39,
+        y+h*.20,
+        w*.22,
+        7,
+        3
+    );
+
+    ctx.fill();
+
+    roundRect(
+        x+w*.17,
+        y+h*.20,
+        w*.22,
+        7,
+        3
+    );
+
+    ctx.fill();
+}
+
+
+/* =========================================================
+   BIKE
+========================================================= */
+
+function drawBike(
+    x,
+    y
+){
+
+    shadow(
+        x,
+        y+60,
+        38
+    );
+
+    ctx.fillStyle="#111";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-35,
+        17,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x,
+        y+47,
+        17,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle=
+    vehicleColor;
+
+    ctx.lineWidth=10;
+    ctx.lineCap="round";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x,
+        y-35
+    );
+
+    ctx.lineTo(
+        x-20,
+        y+8
+    );
+
+    ctx.lineTo(
+        x+20,
+        y+8
+    );
+
+    ctx.lineTo(
+        x,
+        y-35
+    );
+
+    ctx.stroke();
+
+    ctx.fillStyle=
+    lighten(vehicleColor,15);
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        y-2,
+        23,
+        15,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    /*
+       Rider
+    */
+
+    ctx.fillStyle="#222";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-54,
+        12,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle="#222";
+    ctx.lineWidth=8;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x,
+        y-42
+    );
+
+    ctx.lineTo(
+        x,
+        y-8
+    );
+
+    ctx.stroke();
+}
+
+
+/* =========================================================
+   BUS
+========================================================= */
+
+function drawBus(
+    x,
+    y
+){
+
+    const w=108;
+    const h=158;
+
+    shadow(
+        x,
+        y+68,
+        62
+    );
+
+    ctx.fillStyle=
+    vehicleColor;
+
+    roundRect(
+        x-w/2,
+        y-h/2,
+        w,
+        h,
+        14
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle=
+    "rgba(255,255,255,.20)";
+
+    ctx.fillRect(
+        x-w*.39,
+        y-h*.39,
+        w*.78,
+        7
+    );
+
+    ctx.fillStyle="#8cdbf5";
+
+    ctx.fillRect(
+        x-w*.36,
+        y-h*.30,
+        w*.72,
+        h*.25
+    );
+
+    ctx.strokeStyle="#1d3645";
+    ctx.lineWidth=3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x,
+        y-h*.30
+    );
+
+    ctx.lineTo(
+        x,
+        y-h*.05
+    );
+
+    ctx.stroke();
+
+    ctx.fillStyle="#202b32";
+
+    ctx.fillRect(
+        x-w*.40,
+        y+h*.02,
+        w*.80,
+        h*.20
+    );
+
+    ctx.fillStyle="#fff2a0";
+
+    roundRect(
+        x-w*.37,
+        y+h*.30,
+        23,
+        13,
+        4
+    );
+
+    ctx.fill();
+
+    roundRect(
+        x+w*.15,
+        y+h*.30,
+        23,
+        13,
+        4
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#111";
+
+    ctx.fillRect(
+        x-w*.55,
+        y-h*.18,
+        14,
+        42
+    );
+
+    ctx.fillRect(
+        x+w*.42,
+        y-h*.18,
+        14,
+        42
+    );
+}
+
+
+/* =========================================================
+   PLANE
+========================================================= */
+
+function drawPlane(
+    x,
+    y
+){
+
+    shadow(
+        x,
+        y+55,
+        65
+    );
+
+    ctx.fillStyle=
+    vehicleColor;
+
+    roundRect(
+        x-16,
+        y-65,
+        32,
+        130,
+        16
+    );
+
+    ctx.fill();
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x-8,
+        y-5
+    );
+
+    ctx.lineTo(
+        x-78,
+        y+35
+    );
+
+    ctx.lineTo(
+        x-60,
+        y+50
+    );
+
+    ctx.lineTo(
+        x,
+        y+22
+    );
+
+    ctx.lineTo(
+        x+60,
+        y+50
+    );
+
+    ctx.lineTo(
+        x+78,
+        y+35
+    );
+
+    ctx.lineTo(
+        x+8,
+        y-5
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.fillStyle="#91def7";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        y-39,
+        10,
+        20,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#fff4a0";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-66,
+        7,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+}
+
+
+/* =========================================================
+   MAN
+========================================================= */
+
+function drawMan(
+    x,
+    y
+){
+
+    shadow(
+        x,
+        y+65,
+        31
+    );
+
+    /*
+       Body
+    */
+
+    ctx.fillStyle=
+    vehicleColor;
+
+    roundRect(
+        x-21,
+        y-25,
+        42,
+        67,
+        12
+    );
+
+    ctx.fill();
+
+
+    /*
+       Legs
+    */
+
+    ctx.strokeStyle="#202020";
+    ctx.lineWidth=12;
+    ctx.lineCap="round";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x-9,
+        y+37
+    );
+
+    ctx.lineTo(
+        x-25,
+        y+74
+    );
+
+    ctx.moveTo(
+        x+9,
+        y+37
+    );
+
+    ctx.lineTo(
+        x+25,
+        y+74
+    );
+
+    ctx.stroke();
+
+
+    /*
+       Arms
+    */
+
+    ctx.strokeStyle="#dca27c";
+    ctx.lineWidth=10;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x-17,
+        y-10
+    );
+
+    ctx.lineTo(
+        x-40,
+        y+22
+    );
+
+    ctx.moveTo(
+        x+17,
+        y-10
+    );
+
+    ctx.lineTo(
+        x+40,
+        y+22
+    );
+
+    ctx.stroke();
+
+
+    /*
+       Stylized Modi-inspired head
+       drawn directly in canvas.
+    */
+
+    ctx.fillStyle="#dda77e";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-52,
+        20,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /*
+       White/grey hair
+    */
+
+    ctx.fillStyle="#d9d9d9";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-62,
+        20,
+        Math.PI,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /*
+       Beard
+    */
+
+    ctx.fillStyle="#d4d4d4";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-45,
+        13,
+        0,
+        Math.PI
+    );
+
+    ctx.fill();
+
+
+    /*
+       Ears
+    */
+
+    ctx.fillStyle="#d59d77";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x-20,
+        y-51,
+        5,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+20,
+        y-51,
+        5,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /*
+       Eyes
+    */
+
+    ctx.fillStyle="#111";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x-7,
+        y-54,
+        2.2,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+7,
+        y-54,
+        2.2,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /*
+       Glasses
+    */
+
+    ctx.strokeStyle="#333";
+    ctx.lineWidth=2;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x-7,
+        y-54,
+        6,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+7,
+        y-54,
+        6,
+        0,
+        Math.PI*2
+    );
+
+    ctx.moveTo(
+        x-1,
+        y-54
+    );
+
+    ctx.lineTo(
+        x+1,
+        y-54
+    );
+
+    ctx.stroke();
+}
+
+
+/* =========================================================
+   OBJECTS
+========================================================= */
+
+function spawnObject(){
+
+    const lane =
+    Math.floor(
+        Math.random()*3
+    );
+
+    const difficulty =
+    Math.min(
+        1,
+        score/5000
+    );
+
+    const r=Math.random();
+
+    let type;
+
+    /*
+       Later game:
+       more obstacles.
+    */
+
+    if(
+        r < .40 - difficulty*.08
+    ){
+
+        type="coin";
+
+    }else if(
+        r < .57 - difficulty*.04
+    ){
+
+        type="gift";
+
+    }else{
+
+        type="obstacle";
+    }
+
+    objects.push({
+
+        lane:lane,
+
+        y:horizon()+10,
+
+        type:type,
+
+        value:
+        100+
+        Math.floor(
+            Math.random()*350
+        ),
+
+        coins:
+        5+
+        Math.floor(
+            Math.random()*8
+        )
+    });
+}
+
+
+function drawObject(obj){
+
+    const x =
+    laneX(
+        obj.lane,
+        obj.y
+    );
+
+    const t =
+    Math.max(
+        0,
+        Math.min(
+            1,
+            (obj.y-horizon())/
+            (H-horizon())
+        )
+    );
+
+    const s =
+    12+t*60;
+
+
+    if(
+        obj.type==="coin"
+    ){
+
+        ctx.fillStyle="#ffd21a";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            obj.y,
+            s*.42,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        ctx.strokeStyle="#fff7a0";
+        ctx.lineWidth=3;
+
+        ctx.stroke();
+
+        ctx.fillStyle="#785900";
+
+        ctx.font=
+        "bold "+
+        Math.max(10,s*.42)+
+        "px Arial";
+
+        ctx.textAlign="center";
+
+        ctx.fillText(
+            "₹",
+            x,
+            obj.y+s*.15
+        );
+
+    }else if(
+        obj.type==="gift"
+    ){
+
+        /*
+           Gift gives BOTH:
+           score + coins.
+        */
+
+        ctx.fillStyle="#8e44ad";
+
+        roundRect(
+            x-s*.5,
+            obj.y-s*.5,
+            s,
+            s,
+            5
+        );
+
+        ctx.fill();
+
+        ctx.fillStyle="#ffd21a";
+
+        ctx.fillRect(
+            x-s*.08,
+            obj.y-s*.5,
+            s*.16,
+            s
+        );
+
+        ctx.fillRect(
+            x-s*.5,
+            obj.y-s*.08,
+            s,
+            s*.16
+        );
+
+        ctx.fillStyle="#fff";
+
+        ctx.font=
+        "bold "+
+        Math.max(9,s*.25)+
+        "px Arial";
+
+        ctx.fillText(
+            "+"+
+            obj.value+
+            "  🪙"+
+            obj.coins,
+            x,
+            obj.y-s*.68
+        );
+
+    }else{
+
+        /*
+           Traffic barrier
+        */
+
+        ctx.fillStyle="#f05a18";
+
+        roundRect(
+            x-s*.58,
+            obj.y-s*.40,
+            s*1.16,
+            s*.80,
+            4
+        );
+
+        ctx.fill();
+
+        ctx.fillStyle="#fff";
+
+        for(
+            let i=-1;
+            i<=1;
+            i++
+        ){
+
+            ctx.save();
+
+            ctx.translate(
+                x+i*s*.38,
+                obj.y
+            );
+
+            ctx.rotate(-.65);
+
+            ctx.fillRect(
+                -3,
+                -s*.32,
+                6,
+                s*.64
+            );
+
+            ctx.restore();
+        }
+
+        ctx.fillStyle="#ffdf25";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x-s*.37,
+            obj.y-s*.48,
+            4,
+            0,
+            Math.PI*2
+        );
+
+        ctx.arc(
+            x+s*.37,
+            obj.y-s*.48,
+            4,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+    }
+}
+
+
+/* =========================================================
+   COLLISION
+========================================================= */
+
+function collision(obj){
+
+    const playerY =
+    H*.81;
+
+    return(
+        Math.abs(
+            obj.y-playerY
+        ) < 62 &&
+        obj.lane===playerLane
+    );
+}
+
+
+/* =========================================================
+   DIFFICULTY
+========================================================= */
+
+function difficulty(){
+
+    return Math.min(
+        10,
+        Math.floor(
+            score/450
+        )
+    );
+}
+
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+function update(){
+
+    if(
+        !gameRunning ||
+        paused ||
+        countdownRunning
+    )
+        return;
+
+
+    /*
+       Score
+    */
+
+    score +=
+    .075+
+    difficulty()*.004;
+
+
+    /*
+       Gradual speed increase.
+       Starts around 5.2
+       and slowly reaches 14.
+    */
+
+    speed =
+    Math.min(
+        14,
+        5.2+
+        score/900
+    );
+
+    updateEngine();
+
+
+    /*
+       Slow side scenery.
+    */
+
+    updateWorld();
+
+
+    /*
+       Spawn becomes harder.
+    */
+
+    spawnTimer--;
+
+    const spawnGap =
+    Math.max(
+        27,
+        78-
+        difficulty()*3-
+        speed*.7
+    );
+
+    if(
+        spawnTimer<=0
+    ){
+
+        spawnObject();
+
+        spawnTimer=
+        spawnGap;
+    }
+
+
+    /*
+       Objects
+    */
+
+    const objectSpeed =
+    speed+
+    difficulty()*.10;
+
+    for(
+        let i=objects.length-1;
+        i>=0;
+        i--
+    ){
+
+        const obj =
+        objects[i];
+
+        obj.y +=
+        objectSpeed;
+
+
+        if(
+            collision(obj)
+        ){
+
+            if(
+                obj.type==="obstacle"
+            ){
+
+                gameOver();
+
+                return;
+            }
+
+
+            if(
+                obj.type==="coin"
+            ){
+
+                walletCoins++;
+                runCoins++;
+                score+=25;
+
+                localStorage.setItem(
+                    "hr3d_coins",
+                    walletCoins
+                );
+
+                coinSound();
+
+                objects.splice(i,1);
+
+                continue;
+            }
+
+
+            if(
+                obj.type==="gift"
+            ){
+
+                /*
+                   Gift:
+                   score + coins
+                */
+
+                score +=
+                obj.value;
+
+                walletCoins +=
+                obj.coins;
+
+                runCoins +=
+                obj.coins;
+
+                localStorage.setItem(
+                    "hr3d_coins",
+                    walletCoins
+                );
+
+                giftSound();
+
+                objects.splice(i,1);
+
+                continue;
+            }
+        }
+
+
+        if(
+            obj.y>H+120
+        ){
+
+            objects.splice(i,1);
+        }
+    }
+
+    updateHUD();
+}
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD(){
+
+    document.getElementById(
+        "score"
+    ).textContent=
+    Math.floor(score);
+
+    document.getElementById(
+        "coins"
+    ).textContent=
+    walletCoins;
+
+    document.getElementById(
+        "speedHud"
+    ).textContent=
+    (speed/5.2).toFixed(1)+"x";
+}
+
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function gameOver(){
+
+    gameRunning=false;
+
+    stopMusic();
+    stopEngine();
+
+    if(
+        customAudio
+    )
+        customAudio.pause();
+
+    crashSound();
+
+    const finalScore =
+    Math.floor(score);
+
+    if(
+        finalScore>highScore
+    ){
+
+        highScore=finalScore;
+
+        localStorage.setItem(
+            "hr3d_highScore",
+            highScore
+        );
+    }
+
+    saveLeaderboard();
+
+    document.getElementById(
+        "finalName"
+    ).textContent=
+    playerName;
+
+    document.getElementById(
+        "finalScore"
+    ).textContent=
+    finalScore;
+
+    document.getElementById(
+        "finalCoins"
+    ).textContent=
+    runCoins;
+
+    document.getElementById(
+        "finalBest"
+    ).textContent=
+    highScore;
+
+    document
+    .getElementById("gameOver")
+    .classList.remove("hidden");
+
+    document
+    .getElementById("controls")
+    .style.display="none";
+
+    document
+    .getElementById("pauseBtn")
+    .classList.add("hidden");
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+function restartGame(){
+
+    document
+    .getElementById("gameOver")
+    .classList.add("hidden");
+
+    startGame();
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+function backToMenu(){
+
+    gameRunning=false;
+    paused=false;
+
+    stopMusic();
+    stopEngine();
+
+    if(customAudio)
+        customAudio.pause();
+
+    document
+    .getElementById("gameOver")
+    .classList.add("hidden");
+
+    document
+    .getElementById("pauseScreen")
+    .classList.add("hidden");
+
+    showMenu();
+}
+
+
+/* =========================================================
+   PAUSE
+========================================================= */
+
+function togglePause(){
+
+    if(!gameRunning)
+        return;
+
+    paused=!paused;
+
+    if(paused){
+
+        stopMusic();
+
+        document
+        .getElementById("pauseScreen")
+        .classList.remove("hidden");
+
+    }else{
+
+        document
+        .getElementById("pauseScreen")
+        .classList.add("hidden");
+
+        if(customAudio){
+
+            if(soundOn)
+                customAudio.play()
+                .catch(()=>{});
+
+        }else{
+
+            startMusic();
+        }
+    }
+}
+
+
+/* =========================================================
+   CONTROLS
+========================================================= */
+
+function moveLeft(){
+
+    if(
+        !gameRunning ||
+        paused ||
+        countdownRunning
+    )
+        return;
+
+    if(
+        playerLane>0
+    ){
+
+        playerLane--;
+
+        moveSound();
+    }
+}
+
+
+function moveRight(){
+
+    if(
+        !gameRunning ||
+        paused ||
+        countdownRunning
+    )
+        return;
+
+    if(
+        playerLane<2
+    ){
+
+        playerLane++;
+
+        moveSound();
+    }
+}
+
+
+window.addEventListener(
+    "keydown",
+    e=>{
+
+        if(
+            e.key==="ArrowLeft" ||
+            e.key.toLowerCase()==="a"
+        ){
+
+            e.preventDefault();
+
+            moveLeft();
+        }
+
+        if(
+            e.key==="ArrowRight" ||
+            e.key.toLowerCase()==="d"
+        ){
+
+            e.preventDefault();
+
+            moveRight();
+        }
+
+        if(
+            e.key===" " ||
+            e.key==="Escape"
+        ){
+
+            e.preventDefault();
+
+            togglePause();
+        }
+    }
+);
+
+
+/* =========================================================
+   TOUCH BUTTONS
+========================================================= */
+
+document.getElementById(
+    "left"
+).addEventListener(
+    "touchstart",
+    e=>{
+        e.preventDefault();
+        moveLeft();
+    },
+    {passive:false}
+);
+
+
+document.getElementById(
+    "right"
+).addEventListener(
+    "touchstart",
+    e=>{
+        e.preventDefault();
+        moveRight();
+    },
+    {passive:false}
+);
+
+
+document.getElementById(
+    "left"
+).addEventListener(
+    "click",
+    moveLeft
+);
+
+
+document.getElementById(
+    "right"
+).addEventListener(
+    "click",
+    moveRight
+);
+
+
+/* =========================================================
+   SWIPE
+========================================================= */
+
+let touchStartX=0;
+
+canvas.addEventListener(
+    "touchstart",
+    e=>{
+
+        if(
+            e.touches.length
+        ){
+
+            touchStartX =
+            e.touches[0].clientX;
+        }
+    },
+    {passive:true}
+);
+
+
+canvas.addEventListener(
+    "touchend",
+    e=>{
+
+        if(!gameRunning)
+            return;
+
+        const endX =
+        e.changedTouches[0].clientX;
+
+        const diff =
+        endX-touchStartX;
+
+        if(
+            Math.abs(diff)>45
+        ){
+
+            if(diff<0)
+                moveLeft();
+            else
+                moveRight();
+        }
+    },
+    {passive:true}
+);
+
+
+/* =========================================================
+   SAFE ROUND RECT
+========================================================= */
+
+function roundRect(
+    x,
+    y,
+    w,
+    h,
+    r
+){
+
+    r=Math.min(
+        r,
+        Math.abs(w)/2,
+        Math.abs(h)/2
+    );
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x+r,
+        y
+    );
+
+    ctx.lineTo(
+        x+w-r,
+        y
+    );
+
+    ctx.quadraticCurveTo(
+        x+w,
+        y,
+        x+w,
+        y+r
+    );
+
+    ctx.lineTo(
+        x+w,
+        y+h-r
+    );
+
+    ctx.quadraticCurveTo(
+        x+w,
+        y+h,
+        x+w-r,
+        y+h
+    );
+
+    ctx.lineTo(
+        x+r,
+        y+h
+    );
+
+    ctx.quadraticCurveTo(
+        x,
+        y+h,
+        x,
+        y+h-r
+    );
+
+    ctx.lineTo(
+        x,
+        y+r
+    );
+
+    ctx.quadraticCurveTo(
+        x,
+        y,
+        x+r,
+        y
+    );
+
+    ctx.closePath();
+}
+
+
+/* =========================================================
+   COLOR HELPERS
+========================================================= */
+
+function hexRGB(hex){
+
+    hex=hex.replace("#","");
+
+    return{
+
+        r:parseInt(
+            hex.substring(0,2),
+            16
+        ),
+
+        g:parseInt(
+            hex.substring(2,4),
+            16
+        ),
+
+        b:parseInt(
+            hex.substring(4,6),
+            16
+        )
+    };
+}
+
+
+function shade(
+    hex,
+    amount
+){
+
+    const c=hexRGB(hex);
+
+    c.r=Math.max(
+        0,
+        Math.min(
+            255,
+            c.r+amount
+        )
+    );
+
+    c.g=Math.max(
+        0,
+        Math.min(
+            255,
+            c.g+amount
+        )
+    );
+
+    c.b=Math.max(
+        0,
+        Math.min(
+            255,
+            c.b+amount
+        )
+    );
+
+    return rgbHex(c);
+}
+
+
+function lighten(
+    hex,
+    amount
+){
+
+    return shade(
+        hex,
+        amount
+    );
+}
+
+
+function rgbHex(c){
+
+    return "#"+
+    [c.r,c.g,c.b]
+    .map(
+        x=>
+        Math.round(x)
+        .toString(16)
+        .padStart(2,"0")
+    )
+    .join("");
+}
+
+
+/* =========================================================
+   DRAW
+========================================================= */
+
+function draw(){
+
+    drawSky();
+
+    drawCloud(
+        W*.15,
+        H*.12,
+        .8
+    );
+
+    drawCloud(
+        W*.70,
+        H*.18,
+        .65
+    );
+
+    drawGround();
+
+    drawWorld();
+
+    drawRoad();
+
+    objects.sort(
+        (a,b)=>
+        a.y-b.y
+    );
+
+    for(
+        const obj of objects
+    ){
+
+        drawObject(obj);
+    }
+
+    if(
+        gameRunning
+    ){
+
+        drawPlayer();
+    }
+}
+
+
+/* =========================================================
+   MAIN LOOP
+========================================================= */
+
+function loop(){
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(loop);
+}
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+createWorld();
+
+loop();
+
+setTimeout(
+    ()=>{
+
+        document
+        .getElementById("splash")
+        .classList.add("hidden");
+
+        if(!soundOn){
+
+            document.getElementById(
+                "soundStatus"
+            ).textContent="OFF";
+        }
+
+        checkFirstLaunch();
+
+    },
+    3200
+);
+
+</script>
+
+</div>
+
+</body>
+</html>
